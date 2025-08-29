@@ -104,7 +104,7 @@ def main():
     print("=== ベンダー情報ベクトルDB構築開始 ===")
     
     # 設定
-    DATA_FILE = "../../ベンダー調査.md"
+    DATA_FILE = "../ベンダー調査.md"
     VECTORDB_DIR = "vectordb"
     
     try:
