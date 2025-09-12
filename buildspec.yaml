@@ -1,14 +1,26 @@
 version: 0.2
+env:
+  variables:
+    IMAGE_URI: 067717894185.dkr.ecr.ap-northeast-1.amazonaws.com/vendor2-ui:latest
 phases:
   pre_build:
     commands:
-      - aws ecr get-login-password --region ap-northeast-1 |
-        docker login --username AWS --password-stdin 067717894185.dkr.ecr.ap-northeast-1.amazonaws.com
+      - set -euxo pipefail
+      - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin ${IMAGE_URI%/*}
   build:
     commands:
-      - docker build -t vendor2-ui:latest .
-      - docker tag  vendor2-ui:latest 067717894185.dkr.ecr.ap-northeast-1.amazonaws.com/vendor2-ui:latest
+      - set -euxo pipefail
+      - echo "== PWD & tree =="
+      - pwd
+      - ls -la
+      - echo "== Show Dockerfile head =="
+      - head -n 50 Dockerfile
+      - echo "== Docker build =="
+      - docker build --progress=plain -t vendor2-ui:latest .
+      - docker tag vendor2-ui:latest $IMAGE_URI
   post_build:
     commands:
-      - docker push 067717894185.dkr.ecr.ap-northeast-1.amazonaws.com/vendor2-ui:latest
+      - set -euxo pipefail
+      - echo "== Docker push =="
+      - docker push $IMAGE_URI
 artifacts: { files: [] }
